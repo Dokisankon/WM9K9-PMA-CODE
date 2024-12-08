@@ -49,20 +49,18 @@ print(f"The lower bound of data is: {(data.mean() - diff_range):.4f}")
 mean = np.mean(data)
 std = np.std(data)
 
+num_bins = int(1 + 3.322 * np.log10(len(data)))
+
+## Show the historgram
 fig = plt.figure()
 ax = fig.add_subplot(111)
-
-num_bins = int(1 + 3.322 * np.log10(len(data)))
-# bins = np.linspace(min(data), max(data), num_bins + 1)
-
 ax = sns.histplot(data, bins = num_bins)
 plt.title('Historgram of viscosity')
-plt.show()
-exit()
+# plt.show()
 
 hist, bin_edges = np.histogram(data, bins = num_bins)
 
-modify_bins = bins
+modify_bins = bin_edges
 modify_bins[0] = 0
 modify_bins[-1]= 99999
 expected_probs = norm.cdf(modify_bins, mean, std)
@@ -73,36 +71,12 @@ expected = np.array(expected_probs) * len(data)
 chi2_stat, p_value = chisquare(f_obs=hist, f_exp=expected)
 print(f"Chi-value: {chi2_stat}")
 print(f"p-value: {p_value}")
-print(mean)
-print(std)
 
 temp =  norm.cdf([33,35], mean, std)
-print(temp[0] + (1 - temp[1]))
+print(temp)
+print(f"The probability if smaller than 33 is: {temp[0]:.4f}")
+print(f"The probability if larger than 35 is: {1-temp[1]:.4f}")
+print(f"The probability if in outside is: {(temp[0] + 1-temp[1]):.4f}")
+print()
 
-# exit()
-hist, bin_edges = np.histogram(data, bins = bins)
-cdf_values = norm.cdf(bin_edges, data.mean(), std)
-# print(pd.DataFrame({'cdf':cdf_values[1:],'freq':hist}))
-# print(bin_edges)
-
-hist_df = pd.DataFrame({"Length": bin_edges[:-1],
-                        "Frequency": hist})
-bin_frequency = []
-for x in range(len(cdf_values)-1):
-    if x == 0:
-        frequency = cdf_values[0]
-    else:
-        frequency = cdf_values[x] - cdf_values[x-1]
-    bin_frequency.append(frequency)
-bin_frequency = np.array(bin_frequency)
-expected_values = bin_frequency * len(data)
-
-print(hist)
-print(expected_values)
-
-chi_square_values = (hist - expected_values)**2 /expected_values
-chi_square_df = pd.DataFrame({'x^2': chi_square_values})
-chi_square_df.loc['sum'] = chi_square_df.sum()
-print(chi_square_df)
-
-# print(chi())
+plt.show()
