@@ -17,6 +17,7 @@ df_2 = pd.DataFrame(data_2)
 
 print(df_1.describe())
 print(df_2.describe())
+print()
 
 ## F-test
 Var_1 = df_1.var()[0]
@@ -24,7 +25,7 @@ Var_2 = df_2.var()[0]
 
 if Var_1 > Var_2:
     F = Var_1 / Var_2
-    dfn, dfd = len(df_1) - 1, len(df_2) - 1  # 自由度
+    dfn, dfd = len(df_1) - 1, len(df_2) - 1
 else: 
     F = Var_2 / Var_1
     dfn, dfd = len(df_2) - 1, len(df_1) - 1
@@ -37,10 +38,7 @@ print(f"Variance of Disc #2: {Var_2:.4f}")
 print(f"F_value: {F:.4f}")
 print(f"p_value: {p_value:.4f}")
 
-
-# 判断是否拒绝原假设
-alpha = 0.05
-if p_value < alpha:
+if p_value < 0.05:
     print("Rejct null hypothesis: Two data have different Variance.")
 else:
     print("Fail to rejct null hypothesis: Two data have same Variance.")
@@ -52,8 +50,7 @@ T, p_value = ttest_ind(df_1['Disc #1'].to_list(), df_2['Disc #2'].to_list(), equ
 print(f"T_value: {T:.4f}")
 print(f"p_value: {p_value:.4f}")
 
-alpha = 0.05
-if p_value < alpha:
+if p_value < 0.05:
     print("Rejct null hypothesis: Two data have different Mean value.")
 else:
     print("Fail to rejct null hypothesis: Two data have same Mean value.")
@@ -66,27 +63,27 @@ data2 = [71, 62, 37, 46, 36, 44, 63, 71, 49, 44, 41, 76, 55, 64, 41]
 
 
 def detect_outliers_iqr(data):
-    Q1 = np.percentile(data, 25)  # 第 1 四分位数
-    Q3 = np.percentile(data, 75)  # 第 3 四分位数
-    IQR = Q3 - Q1  # 四分位距
-    lower_bound = Q1 - 1.5 * IQR  # 下边界
-    upper_bound = Q3 + 1.5 * IQR  # 上边界
-    outliers = [x for x in data if x < lower_bound or x > upper_bound]
+    Q1 = np.percentile(data, 25)
+    Q3 = np.percentile(data, 75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = []
+    for x in data:
+        if x < lower_bound or x > upper_bound:
+            outliers.append(x)
     return outliers, lower_bound, upper_bound
 
-# 检测两组数据的异常值
 outliers1, lb1, ub1 = detect_outliers_iqr(data1)
 outliers2, lb2, ub2 = detect_outliers_iqr(data2)
 
-print("Outliers analisys")
 print("Disc #1 Outliers:", outliers1)
 print(f"Disc #1 range: [{lb1:.2f}, {ub1:.2f}]")
 print("Disc #2 Outliers:", outliers2)
 print(f"Disc #2 range: [{lb2:.2f}, {ub2:.2f}]")
-print("\n")
+print()
 
 ## (ii)
-
 data = {
     "Month": [
         "2022-01-01", "2022-02-01", "2022-03-01", "2022-04-01", "2022-05-01",
@@ -113,13 +110,13 @@ df = pd.DataFrame(data)
 
 print(df)
 
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
-# ax = plt.plot(df['Social Media Engagement'],df['E-commerce Sales (GBP)'],'o')
-# plt.xlabel('Social Media Engagement')
-# plt.ylabel('E-commerce Sales (GBP)')
-# plt.title('Engagement v.s. Sales')
-# plt.show()
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax = plt.plot(df['Social Media Engagement'],df['E-commerce Sales (GBP)'],'o')
+plt.xlabel('Social Media Engagement')
+plt.ylabel('E-commerce Sales (GBP)')
+plt.title('Engagement v.s. Sales')
+
 
 ## correlation test pearson's r
 SME = df['Social Media Engagement']
@@ -142,3 +139,5 @@ model = sm.OLS(y, X).fit()
 
 print(model.summary())
 print()
+
+plt.show()
