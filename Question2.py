@@ -11,7 +11,7 @@ x = 2
 
 prob = (mean**x * np.exp(-mean))/(math.factorial(x))
 
-print(f"The probability of having {x} defect in 1 meter is {prob}")
+print(f"The probability of having {x} defect in 1 meter is {prob:.4f}")
 
 ## (i)(b)
 def poisson_prob(mean, x):
@@ -21,14 +21,14 @@ prob = 1
 for x in range(9):
     prob -= poisson_prob(mean = 2.6*5, x = x)
     
-print(f"The probability of having more than 8 defect in 5 meter is {prob}")
+print(f"The probability of having more than 8 defect in 5 meter is {prob:.4f}")
 
 ##(i)(c)
 prob = 0
 for x in range(20):
     prob += poisson_prob(mean = 2.6*10, x = x)
     
-print(f"The probability of having less than 20 defect in 10 meter is {prob}")
+print(f"The probability of having less than 20 defect in 10 meter is {prob:.4f}")
 
 
 ##(ii)(a)
@@ -42,22 +42,23 @@ diff_norm = norm.ppf(0.975)
 std = np.power(data.var(), 0.5)
 
 diff_range = diff_norm * (std / np.sqrt(15))
-print(data.mean() + diff_range)
-print(data.mean() - diff_range)
+print(f"The upper bound of data is: {(data.mean() + diff_range):.4f}")
+print(f"The lower bound of data is: {(data.mean() - diff_range):.4f}")
 
 ##(ii)(c)
 mean = np.mean(data)
 std = np.std(data)
 
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
+fig = plt.figure()
+ax = fig.add_subplot(111)
 
 num_bins = int(1 + 3.322 * np.log10(len(data)))
-bins = np.linspace(min(data), max(data), num_bins + 1)  # 等间隔区间
+# bins = np.linspace(min(data), max(data), num_bins + 1)
 
-# ax = sns.histplot(data, bins = bins)
-# plt.title('Historgram of viscosity')
-# plt.show()
+ax = sns.histplot(data, bins = num_bins)
+plt.title('Historgram of viscosity')
+plt.show()
+exit()
 
 hist, bin_edges = np.histogram(data, bins = num_bins)
 
@@ -104,4 +105,4 @@ chi_square_df = pd.DataFrame({'x^2': chi_square_values})
 chi_square_df.loc['sum'] = chi_square_df.sum()
 print(chi_square_df)
 
-print(chi())
+# print(chi())
